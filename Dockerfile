@@ -1,9 +1,8 @@
 # Base image
 FROM openjdk:17-jdk-slim
 
-# Update the package list and install Maven
-RUN sed -i 's|http://deb.debian.org/debian|http://ftp.us.debian.org/debian|g' /etc/apt/sources.list && \
-    apt-get -o Acquire::Retries=3 update && \
+# Install Maven
+RUN apt-get update && \
     apt-get install -y maven && \
     apt-get clean;
 
@@ -22,6 +21,6 @@ RUN mvn package -DskipTests
 
 # Expose the port the app runs on
 EXPOSE 80
-
-# Command to run the application
+#
+## Command to run the application
 CMD ["java", "-jar", "target/SmartHomeManagementSystemBackend-0.0.1-SNAPSHOT.war"]
