@@ -15,14 +15,14 @@ services:
       retries: 5
 
   app:
-    build: .  # Ensure your Dockerfile is in the context of this folder
+    build: .
     ports:
       - "8191:8191"
     depends_on:
       db:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/SmartHomeManagementSystem  # Use 'db' as the hostname
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/SmartHomeManagementSystem
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root 
 
