@@ -1,40 +1,46 @@
 version: '3.8'
-
 services:
   db:
     image: mariadb:latest
-    container_name: mariadb
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "no"
       MYSQL_DATABASE: SmartHomeManagementSystem
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
+      test: [ "CMD", "mariadb-admin", "ping", "--silent" ]
+      interval: 30s
+      timeout: 10s
       retries: 5
-    networks:
-      - mynetwork
 
   app:
-    build:
-      context: ./smart-home-backend
-    container_name: springboot-app
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/SmartHomeManagementSystem
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
+    build: .
+    ports:
+      - "8191:8191"
     depends_on:
       db:
         condition: service_healthy
-    networks:
-      - mynetwork
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/SmartHomeManagementSystem
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root 
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - "8080:80"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
 
   frontend:
     build:
       context: ./smart-home-frontend
-    container_name: frontend-app
-    networks:
-      - mynetwork
-
-networks:
-  mynetwork:
+    ports:
+      - "4200:80"
