@@ -21,7 +21,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://192.168.189.144:3306/SmartHomeManagementSystem
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/SmartHomeManagementSystem
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ""
 
